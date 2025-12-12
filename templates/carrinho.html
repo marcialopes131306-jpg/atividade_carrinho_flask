@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Seu Carrinho</h1>
+
+{% if carrinho and carrinho|length > 0 %}
+    <!-- Tabela de itens do carrinho -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="py-2 px-4 border-b text-left">Produto</th>
+                    <th class="py-2 px-4 border-b text-left">Preço</th>
+                    <th class="py-2 px-4 border-b text-left">Ações</th>
+                    <th class="py-2 px-4 border-b text-left">Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrinho %}
+                <tr class="hover:bg-gray-50">
+                    <td class="py-2 px-4 border-b">{{ item.produto.nome }}</td>
+                    <td class="py-2 px-4 border-b">R$ {{ "%.2f"|format(item.produto.preco) }}</td>
+                    <td class="py-2 px-4 border-b">{{ item.quantidade }}</td>
+                    <td class="py-2 px-4 border-b">R$ {{ "%.2f"|format(item.produto.preco * item.quantidade) }}</td>
+                    <td class="py-2 px-4 border-b">
+                        <!-- Botão para remover item -->
+                        <form action="{{ url_for('remover_do_carrinho', produto_id=item.produto.id) }}" method="post" class="inline">
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition">
+                                Remover
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Total do carrinho -->
+    <h3 class="text-xl font-semibold mt-6">Total: R$ {{ "%.2f"|format(total) }}</h3>
+    
+{% else %}
+    <!-- Carrinho vazio -->
+    <p class="text-gray-600">Seu carrinho está vazio.</p>
+{% endif %}
+
+<!-- Botão para continuar comprando -->
+<a href="{{ url_for('index') }}" class="inline-block mt-6 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">
+    Continuar comprando
+</a>
+
+{% if carrinho and carrinho|length > 0%}
+    <!-- Botão para finalizar compra -->
+    <form action="{{ url_for('limpar_compra') }}" method="post" class="inline ml-4">
+        <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded transition">
+            Limpar Carrinho
+        </button>
+    </form>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Lista de Produtos</h1>
+    
+    <!-- Grid de produtos -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for produto in produtos.values() %}
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center">
+            <!-- Imagem do produto -->
+            <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" 
+                 class="w-32 h-32 object-cover mb-4 rounded">
+            
+            <!-- Nome do produto -->
+            <h2 class="text-xl font-semibold mb-2">{{ produto.nome }}</h2>
+            
+            <!-- Preço -->
+            <p class="text-gray-700 mb-2">R$ {{ "%.2f"|format(produto.preco) }}</p>
+            
+            <!-- Quantidade de produto e Botão para adicionar ao carrinho -->
+            <form action="{{ url_for('adicionar_ao_carrinho', produto_id=produto.id) }}" method="post">
+                <input type="number" id="quantidade_{{ produto.id }}" name="quantidade" value="1" min="1" class="w-16 px-2 py-1 border rounded" required>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    Adicionar ao Carrinho
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="mb-8 p-4 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-4">Filtrar por Categorias</h2>
+    <div class="flex space-x-4">
+        <a href="{{ url_for('index', categoria='Eletrônicos') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">
+            Eletrônicos
+        </a>
+        <a href="{{ url_for('index', categoria='Celulares e Telefones') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">
+            Celulares e Telefones
+        </a>
+        <a href="{{ url_for('index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">
+            Todas as Categorias
+        </a>
+    </div>
+</div>
+{% endblock %}
